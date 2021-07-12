@@ -3,7 +3,7 @@ A small shellcode loader library written in C#
 This small library allows you to inject shellcode in memory of current launched file. 
 Useful to use as red team or in a remote access tool.
 
-I added some test payloads that I've converted with 
+I added some test payloads which I've converted with 
 * First with : Donut (https://github.com/TheWover/donut) : turns my payload into raw shellcode
 * Second with HxD Editor (https://mh-nexus.de/en/downloads.php?product=HxD20) : gives me an array of raw bytes from payloads converted with Donut
 
