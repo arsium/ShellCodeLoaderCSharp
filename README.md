@@ -27,5 +27,5 @@ Includes :
 * Enumeration: FreeType
 
 TODO :
-* Inject shellcode in another process
+* Inject shellcode in another process with VirtualEx and NtEx functions
 * Check if shellcode is 64 or 32 bit before injection
