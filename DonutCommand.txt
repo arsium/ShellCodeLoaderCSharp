@@ -1,0 +1,1 @@
+donut.exe %Path_to_your_exe_or_dll_file%

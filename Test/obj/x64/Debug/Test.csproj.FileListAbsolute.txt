@@ -1,0 +1,13 @@
+F:\Personal\ShellCodeLoader\Test\bin\x64\Debug\Test.exe.config
+F:\Personal\ShellCodeLoader\Test\bin\x64\Debug\Test.exe
+F:\Personal\ShellCodeLoader\Test\bin\x64\Debug\Test.pdb
+F:\Personal\ShellCodeLoader\Test\bin\x64\Debug\ShellCodeLoader.dll
+F:\Personal\ShellCodeLoader\Test\bin\x64\Debug\ShellCodeLoader.pdb
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.csproj.AssemblyReference.cache
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.Form1.resources
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.Properties.Resources.resources
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.csproj.GenerateResource.cache
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.csproj.CoreCompileInputs.cache
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.csproj.CopyComplete
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.exe
+F:\Personal\ShellCodeLoader\Test\obj\x64\Debug\Test.pdb
