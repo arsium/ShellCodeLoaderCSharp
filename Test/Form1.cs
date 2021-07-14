@@ -61,5 +61,52 @@ namespace Test
                 csharp.Dispose();
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (IntPtr.Size == 8)
+            {
+                ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp64.rawData);
+                cpp.LoadWithNTDelegates();
+                cpp.Dispose();
+                ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp64.rawData);
+                csharp.LoadWithNTDelegates();
+                csharp.Dispose();
+            }
+            else
+            {
+                ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp32.rawData);
+                cpp.Asynchronous = true;
+                cpp.LoadWithNTDelegates();
+                cpp.Dispose();
+                ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp32.rawData);
+                csharp.LoadWithNTDelegates();
+                csharp.Dispose();
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (IntPtr.Size == 8)
+            {
+                ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp64.rawData);
+                cpp.LoadWithKernel32Delegates();
+                cpp.Dispose();
+                ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp64.rawData);
+                csharp.LoadWithKernel32Delegates();
+                csharp.Dispose();
+            }
+            else
+            {
+                ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp32.rawData);
+                cpp.Asynchronous = true;
+                cpp.LoadWithKernel32Delegates();
+                cpp.Dispose();
+                ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp32.rawData);
+                csharp.LoadWithKernel32Delegates();
+                csharp.Dispose();
+            }
+
+        }
     }
 }

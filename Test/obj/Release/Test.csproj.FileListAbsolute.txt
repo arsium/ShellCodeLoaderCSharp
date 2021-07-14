@@ -1,0 +1,13 @@
+F:\Personal\ShellCodeLoader\Test\bin\Release\Test.exe.config
+F:\Personal\ShellCodeLoader\Test\bin\Release\Test.exe
+F:\Personal\ShellCodeLoader\Test\bin\Release\Test.pdb
+F:\Personal\ShellCodeLoader\Test\bin\Release\ShellCodeLoader.dll
+F:\Personal\ShellCodeLoader\Test\bin\Release\ShellCodeLoader.pdb
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.AssemblyReference.cache
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.Form1.resources
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.Properties.Resources.resources
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.GenerateResource.cache
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.CoreCompileInputs.cache
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.CopyComplete
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.exe
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.pdb
