@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 /*
 || AUTHOR Arsium ||
@@ -19,25 +20,56 @@ namespace Test
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (IntPtr.Size == 8)
-            {
-                ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp64.rawData);
-                cpp.LoadWithNT();
-                cpp.Dispose();
-                ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp64.rawData);
-                csharp.LoadWithNT();
-                csharp.Dispose();
-            }
-            else 
-            {
-                ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp32.rawData);
-                cpp.Asynchronous = true;
-                cpp.LoadWithNT();
-                cpp.Dispose();
-                ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp32.rawData);
-                csharp.LoadWithNT();
-                csharp.Dispose();
-            }
+            /* if (IntPtr.Size == 8)
+             {
+                 ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp64.rawData);
+                 cpp.LoadWithNT();
+                 cpp.Dispose();
+                 ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp64.rawData);
+                 csharp.LoadWithNT();
+                 csharp.Dispose();
+             }
+             else 
+             {
+                 ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp32.rawData);
+                 cpp.Asynchronous = true;
+                 cpp.LoadWithNT();
+                 cpp.Dispose();
+                 ShellCodeLoader.ShellCodeLoader csharp = new ShellCodeLoader.ShellCodeLoader(PayloadCSharp32.rawData);
+                 csharp.LoadWithNT();
+                 csharp.Dispose();
+             }*/
+
+   
+
+         
+            Process Target = Process.GetProcessesByName("notepad")[0];
+            MessageBox.Show(Target.MainWindowTitle);
+            ShellCodeLoader.ShellCodeLoaderEx cpp = new ShellCodeLoader.ShellCodeLoaderEx(Target, PayloadCpp64.rawData);
+            cpp.LoadWithKernel32();
+            cpp.LoadWithNT();
+            cpp.Dispose(); 
+            
+            /*  if (IntPtr.Size == 8)
+              {
+                  ShellCodeLoader.ShellCodeLoaderEx cpp = new ShellCodeLoader.ShellCodeLoaderEx(Target, PayloadCpp64.rawData);
+                  cpp.LoadWithNT();
+                  cpp.Dispose();
+                  ShellCodeLoader.ShellCodeLoaderEx csharp = new ShellCodeLoader.ShellCodeLoaderEx(Target, PayloadCSharp64.rawData);
+                  csharp.LoadWithNT();
+                  csharp.Dispose();
+              }
+              else
+              {
+                  ShellCodeLoader.ShellCodeLoaderEx cpp = new ShellCodeLoader.ShellCodeLoaderEx(Target, PayloadCpp32.rawData);
+                  cpp.Asynchronous = true;
+                  cpp.LoadWithNT();
+                  cpp.Dispose();
+                  ShellCodeLoader.ShellCodeLoaderEx csharp = new ShellCodeLoader.ShellCodeLoaderEx(Target, PayloadCSharp32.rawData);
+                  csharp.LoadWithNT();
+                  csharp.Dispose();
+              }*/
+
         }
         private void button2_Click(object sender, EventArgs e)
         {

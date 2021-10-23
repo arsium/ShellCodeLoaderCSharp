@@ -8,6 +8,6 @@ F:\Personal\ShellCodeLoader\Test\obj\Release\Test.Form1.resources
 F:\Personal\ShellCodeLoader\Test\obj\Release\Test.Properties.Resources.resources
 F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.GenerateResource.cache
 F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.CoreCompileInputs.cache
-F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.CopyComplete
 F:\Personal\ShellCodeLoader\Test\obj\Release\Test.exe
 F:\Personal\ShellCodeLoader\Test\obj\Release\Test.pdb
+F:\Personal\ShellCodeLoader\Test\obj\Release\Test.csproj.CopyComplete

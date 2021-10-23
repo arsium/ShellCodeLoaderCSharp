@@ -1,0 +1,6 @@
+F:\Personal\ShellCodeLoader\ShellCodeLoader\bin\x64\Release\ShellCodeLoader.dll
+F:\Personal\ShellCodeLoader\ShellCodeLoader\bin\x64\Release\ShellCodeLoader.pdb
+F:\Personal\ShellCodeLoader\ShellCodeLoader\obj\x64\Release\ShellCodeLoader.csproj.CoreCompileInputs.cache
+F:\Personal\ShellCodeLoader\ShellCodeLoader\obj\x64\Release\ShellCodeLoader.dll
+F:\Personal\ShellCodeLoader\ShellCodeLoader\obj\x64\Release\ShellCodeLoader.pdb
+F:\Personal\ShellCodeLoader\ShellCodeLoader\obj\x64\Release\ShellCodeLoader.csproj.AssemblyReference.cache
