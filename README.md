@@ -32,7 +32,7 @@ Includes :
 * Delegates : all functions have been written with delegate style except GetModuleHandle and GetProcAddress
 
 TODO :
-* ~~ Inject shellcode in another process with VirtualEx and NtEx functions~~ 
+* <s>Inject shellcode in another process with VirtualEx and NtEx functions</s>
 * Check if shellcode is 64 or 32 bit before injection
 
 Known : 
