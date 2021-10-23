@@ -1,7 +1,7 @@
 # ShellCodeLoader
 A small shellcode loader library written in C#
-This small library allows you to inject shellcode in memory of current launched file. 
-Useful to use as red team or in a remote access tool. Works for 32 & 64 bit Executable
+This small library allows you to inject shellcode in memory of current launched file or any other processes.
+Useful to use as red team or in a remote access tool. Works for 32 & 64 bit shellcode.
 
 Note : Shellcode for 32 bit works ONLY for 32 bit and vice-versa (64 bit). 
 
@@ -19,11 +19,15 @@ Includes :
 * NtDll : NtWriteVirtualMemory
 * NtDll : NtProtectVirtualMemory
 * NtDll : NtFreeVirtualMemory
+* NtDll : NtCreateThreadEx
 * Kernel32 : GetCurrentProcess
 * Kernel32 : VirtualAlloc
+* Kernel32 : VirtualAllocEx
 * Kernel32 : VirtualFree
 * Kernel32 : VirtualProtect
+* Kernel32 : VirtualProtectEx
 * Kernel32 : WriteProcessMemory
+* Kernel32 : CreateRemoteThread
 * Kernel32 : GetModuleHandle
 * Kernel32 : GetProcAddress
 * Enumeration : PageProtection
