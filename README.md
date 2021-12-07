@@ -5,7 +5,7 @@ This small library allows you to inject shellcode in memory of current launched 
 Useful to use as red team or in a remote access tool. Works for 32 & 64 bit shellcode.
 
 Note : 
-* has been tested on same proces and notepad and all works fine
+* has been tested on same process and notepad as target
 
 I added some test payloads which I've converted with 
 * First with : Donut (https://github.com/TheWover/donut) : turns my payload into raw shellcode
