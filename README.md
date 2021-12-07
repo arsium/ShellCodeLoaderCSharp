@@ -1,7 +1,7 @@
 # ShellCodeLoader
 A small shellcode loader library written in C#.
 <br>
-This small library allows you to inject shellcode in memory of current launched file or any other processes.
+This small library allows you to inject shellcode in memory of current launched file or any other processes while using different techniques.
 Useful to use as red team or in a remote access tool. Works for 32 & 64 bit shellcode.
 
 Note : 
