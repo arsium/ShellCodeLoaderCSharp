@@ -28,6 +28,22 @@ cpp.LoadWithKernel32();//or cpp.LoadWithNT();
 cpp.Dispose();
 ```
 
+MapView:
+
+```
+ShellCodeLoader.MapView cpp = new ShellCodeLoader.MapView(PayloadCpp64.rawData);
+cpp.LoadWithNtMapView();
+cpp.Dispose();
+```
+
+MapView with target:
+
+```
+ShellCodeLoader.MapView cpp = new ShellCodeLoader.MapView(Target, PayloadCpp64.rawData);
+cpp.LoadWithNtMapView();
+cpp.Dispose();
+```
+
 Includes : 
 
 * Asynchronous (a simple Task.Run to not block main thread)
@@ -38,6 +54,8 @@ Includes :
 * NtDll : NtProtectVirtualMemory
 * NtDll : NtFreeVirtualMemory
 * NtDll : NtCreateThreadEx
+* NtDll : NtCreateSection
+* NtDll : NtMapViewOfSection
 * Kernel32 : GetCurrentProcess
 * Kernel32 : VirtualAlloc
 * Kernel32 : VirtualAllocEx
@@ -51,6 +69,8 @@ Includes :
 * Enumeration : PageProtection
 * Enumeration : TypeAlloc
 * Enumeration: FreeType
+* Enumeration : SectionAccess
+* Enumeration : MappingAttributes
 * Delegates : all functions have been written with delegate style except GetModuleHandle and GetProcAddress
 
 TODO :
