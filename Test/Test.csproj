@@ -71,10 +71,14 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Payload2Cpp32.cs" />
+    <Compile Include="Payload2Cpp64.cs" />
     <Compile Include="PayloadCpp32.cs" />
     <Compile Include="PayloadCpp64.cs" />
     <Compile Include="PayloadCSharp32.cs" />
     <Compile Include="PayloadCSharp64.cs" />
+    <Compile Include="PayloadD_DLL_32.cs" />
+    <Compile Include="PayloadD_DLL_64.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

