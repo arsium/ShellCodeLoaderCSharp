@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 /*
 || AUTHOR Arsium ||
 || github : https://github.com/arsium       ||
 || Please let this credit for all the time I worked on ||
- */
+*/
 namespace ShellCodeLoader
 {
     internal class Shared
     {
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        internal delegate void ShellCodeCaller();
+
         [Flags]
-        public enum TypeAlloc : uint
+        internal enum TypeAlloc : uint
         {
             MEM_COMMIT = 0x00001000,
             MEM_RESERVE = 0x00002000,
@@ -22,7 +26,7 @@ namespace ShellCodeLoader
         }
 
         [Flags]
-        public enum FreeType : uint
+        internal enum FreeType : uint
         {
             MEM_DECOMMIT = 0x00004000,
             MEM_RELEASE = 0x00008000,
@@ -31,7 +35,7 @@ namespace ShellCodeLoader
         }
 
         [Flags]
-        public enum PageProtection : uint
+        internal enum PageProtection : uint
         {
             PAGE_EXECUTE = 0x10,
             PAGE_EXECUTE_READ = 0x20,
@@ -49,7 +53,7 @@ namespace ShellCodeLoader
         }
 
         [Flags]
-        public enum AccessMask : uint
+        internal enum AccessMask : uint
         {
             GENERIC_READ = 0x80000000,
             GENERIC_WRITE = 0x40000000,

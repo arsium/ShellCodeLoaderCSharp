@@ -56,10 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MapView.cs" />
+    <Compile Include="QueueAPC.cs" />
     <Compile Include="Shared.cs" />
     <Compile Include="ShellCodeLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShellCodeLoaderEx.cs" />
+    <Compile Include="ShellCodeLoaderMinimalNativeAPI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

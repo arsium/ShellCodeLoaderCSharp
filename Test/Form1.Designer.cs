@@ -39,9 +39,11 @@ namespace Test
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.injectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.injectWithMapViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button5 = new System.Windows.Forms.Button();
-            this.injectWithMapViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,19 +116,26 @@ namespace Test
             this.injectWithMapViewToolStripMenuItem,
             this.refreshToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(184, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(184, 70);
             // 
             // injectToolStripMenuItem
             // 
             this.injectToolStripMenuItem.Name = "injectToolStripMenuItem";
-            this.injectToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.injectToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.injectToolStripMenuItem.Text = "Inject";
             this.injectToolStripMenuItem.Click += new System.EventHandler(this.injectToolStripMenuItem_Click);
+            // 
+            // injectWithMapViewToolStripMenuItem
+            // 
+            this.injectWithMapViewToolStripMenuItem.Name = "injectWithMapViewToolStripMenuItem";
+            this.injectWithMapViewToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.injectWithMapViewToolStripMenuItem.Text = "Inject With MapView";
+            this.injectWithMapViewToolStripMenuItem.Click += new System.EventHandler(this.injectWithMapViewToolStripMenuItem_Click);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
@@ -140,18 +149,33 @@ namespace Test
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // injectWithMapViewToolStripMenuItem
+            // button6
             // 
-            this.injectWithMapViewToolStripMenuItem.Name = "injectWithMapViewToolStripMenuItem";
-            this.injectWithMapViewToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.injectWithMapViewToolStripMenuItem.Text = "Inject With MapView";
-            this.injectWithMapViewToolStripMenuItem.Click += new System.EventHandler(this.injectWithMapViewToolStripMenuItem_Click);
+            this.button6.Location = new System.Drawing.Point(294, 89);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(121, 59);
+            this.button6.TabIndex = 6;
+            this.button6.Text = "Local QueueAPC";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(436, 12);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(121, 59);
+            this.button7.TabIndex = 7;
+            this.button7.Text = "Minimal API";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 415);
+            this.ClientSize = new System.Drawing.Size(569, 356);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.button4);
@@ -179,6 +203,8 @@ namespace Test
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ToolStripMenuItem injectWithMapViewToolStripMenuItem;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
     }
 }
 

