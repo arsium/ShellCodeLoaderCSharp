@@ -97,6 +97,7 @@ Includes :
 TODO :
 * <s>Inject shellcode in another process with VirtualEx and NtEx functions</s>
 * Check if shellcode is 64 or 32 bit before injection
+* Check if dll (kernel32, ntdll) have been loaded
 
 Known : 
 * Debugging 32 bit test injection involves PInvokeStackImbalance
