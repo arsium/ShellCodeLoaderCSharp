@@ -45,6 +45,23 @@ cpp.LoadWithNtMapView();
 cpp.Dispose();
 ```
 
+QueueAPC:
+
+```
+ShellCodeLoader.QueueAPC cpp = new ShellCodeLoader.QueueAPC(PayloadCpp64.rawData);
+cpp.LoadWithQueueAPC();
+cpp.Dispose();
+```
+
+Minimal API:
+
+```
+ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI cpp = new ShellCodeLoader.ShellCodeLoaderMinimalNativeAPI(PayloadCpp64.rawData);
+cpp.Asynchronous = true;//  false otherwise
+cpp.LoadWithMinimalAPI();
+cpp.Dispose();
+```
+
 Includes : 
 
 * Asynchronous (a simple Task.Run to not block main thread)
