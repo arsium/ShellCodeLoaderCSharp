@@ -57,6 +57,7 @@ Includes :
 * NtDll : NtCreateThreadEx
 * NtDll : NtCreateSection
 * NtDll : NtMapViewOfSection
+* NtDll : NtTestAlert
 * Kernel32 : GetCurrentProcess
 * Kernel32 : VirtualAlloc
 * Kernel32 : VirtualAllocEx
@@ -67,6 +68,8 @@ Includes :
 * Kernel32 : CreateRemoteThread
 * Kernel32 : GetModuleHandle
 * Kernel32 : GetProcAddress
+* Kernel32 : QueueUserAPC
+* Kernel32 : SleepEx
 * Enumeration : PageProtection
 * Enumeration : TypeAlloc
 * Enumeration: FreeType
